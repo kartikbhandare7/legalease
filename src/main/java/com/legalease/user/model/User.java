@@ -1,5 +1,8 @@
 package com.legalease.user.model;
 
+import com.legalease.common.enums.AccountStatus;
+import com.legalease.common.enums.AuthProvider;
+import com.legalease.common.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
