@@ -1,3 +1,52 @@
 spring:
-  application:
-    name: legalease
+  datasource:
+    url: jdbc:postgresql://localhost:5432/legalease_db
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate        # Flyway owns schema — JPA only validates
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  # Google OAuth2 credentials — get from Google Cloud Console
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+
+  # Spring AI — Gemini via OpenAI-compatible endpoint
+  ai:
+    openai:
+      api-key: ${GEMINI_API_KEY}
+      base-url: https://generativelanguage.googleapis.com/v1beta/openai
+      chat:
+        options:
+          model: gemini-2.0-flash
+
+# Custom app properties
+app:
+  jwt:
+    secret: ${JWT_SECRET}       # min 32 chars — store in .env, never commit
+    expiration-ms: 86400000     # 24 hours
+  frontend-url: http://localhost:5173
+
+server:
+  port: 8080
