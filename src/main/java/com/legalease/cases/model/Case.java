@@ -29,8 +29,12 @@ public class Case {
     @JoinColumn(name = "Lawyer_id", nullable = false)
     private User lawyer;
 
-    @Column(name = "case_title" , nullable = false)
-    private CaseType castType;
+    @Column(name = "case_title", nullable = false)
+    private String caseTitle;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "case_type", nullable = false)
+    private CaseType caseType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "case_status", nullable = false)
@@ -39,8 +43,8 @@ public class Case {
     @Column(name = "case_number")
     private String caseNumber;
 
-    @Column(name = "Case_name")
-    private String caseName;
+    @Column(name = "Court_name")
+    private String courtName;
 
     @Column(name = "notes" , columnDefinition = "TEXT")
     private String notes;
