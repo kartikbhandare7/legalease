@@ -17,5 +17,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByReferralCode(String referralCode);
 
-    <T> ScopedValue<T> findById(UUID lawyerId);
+    Optional<User> findById(UUID lawyerId);
 }
