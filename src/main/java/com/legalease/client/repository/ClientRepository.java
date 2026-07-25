@@ -15,7 +15,7 @@ import java.util.UUID;
 public interface ClientRepository extends JpaRepository<Client, UUID> {
 
     // All clients under a specific case
-    Page<Client> findByCaseIdOrderByCreatedAtDesc(
+    Page<Client> findByLegalCase_IdOrderByCreatedAtDesc(
             UUID caseId, Pageable pageable);
 
     // All clients for a lawyer — cross-case dashboard view
@@ -42,5 +42,7 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     );
 
     // Check if client already exists for this case — avoid duplicates
-    boolean existsByCaseIdAndClientNameIgnoreCase(UUID caseId, String clientName);
+    boolean existsByLegalCase_IdAndClientNameIgnoreCase(
+            UUID caseId,
+            String clientName);
 }

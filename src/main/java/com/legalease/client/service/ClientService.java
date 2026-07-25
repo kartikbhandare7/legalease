@@ -46,7 +46,7 @@ public class ClientService {
                                 "Case not found or access denied"));
 
         // 3. Prevent duplicate client entry for same case
-        if (clientRepository.existsByCaseIdAndClientNameIgnoreCase(
+        if (clientRepository.existsByLegalCase_IdAndClientNameIgnoreCase(
                 request.getCaseId(), request.getClientName())) {
             throw new BadRequestException(
                     "Client '" + request.getClientName() +
@@ -54,7 +54,7 @@ public class ClientService {
         }
 
         Client client = Client.builder()
-                .case_(linkedCase)
+                .legalCase(linkedCase)
                 .lawyer(lawyer)
                 .clientName(request.getClientName())
                 .phone(request.getPhone())
@@ -82,7 +82,7 @@ public class ClientService {
 
         Pageable pageable = PageRequest.of(page, size);
         return clientRepository
-                .findByCaseIdOrderByCreatedAtDesc(caseId, pageable)
+                .findByLegalCase_IdOrderByCreatedAtDesc(caseId, pageable)
                 .map(this::mapToResponse);
     }
 
@@ -155,8 +155,8 @@ public class ClientService {
     private ClientResponse mapToResponse(Client c) {
         return ClientResponse.builder()
                 .id(c.getId())
-                .caseId(c.getCase_().getId())
-                .caseTitle(c.getCase_().getCaseTitle())
+                .caseId(c.getLegalCase().getId())
+                .caseTitle(c.getLegalCase().getCaseTitle())
                 .lawyerId(c.getLawyer().getId())
                 .lawyerName(c.getLawyer().getFullName())
                 .clientName(c.getClientName())

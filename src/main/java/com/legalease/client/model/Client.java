@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name="clients")
+@Table(name = "clients")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,15 +21,17 @@ public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", updatable = false,nullable = false)
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    // Client always belongs to a case
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "case_id", nullable = false)
-    private Case case_;
+    private Case legalCase;
 
+    // Direct lawyer link — fast dashboard queries without joining cases
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lawyer_id",nullable = false)
+    @JoinColumn(name = "lawyer_id", nullable = false)
     private User lawyer;
 
     @Column(name = "client_name", nullable = false)
@@ -41,15 +43,19 @@ public class Client {
     @Column(name = "email")
     private String email;
 
+    // Opposing party — AI extracts from raw intake note
     @Column(name = "opposing_party")
     private String opposingParty;
 
+    // Full background story — AI fills from lawyer's rough description
     @Column(name = "case_background", columnDefinition = "TEXT")
     private String caseBackground;
 
+    // Raw note lawyer typed before AI parsed — kept for audit trail
     @Column(name = "raw_intake_note", columnDefinition = "TEXT")
     private String rawIntakeNote;
 
+    // True if intake was filled via AI log — useful for analytics
     @Column(name = "ai_assisted", nullable = false)
     private boolean aiAssisted = false;
 
@@ -60,5 +66,4 @@ public class Client {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
 }

@@ -13,6 +13,7 @@ import com.legalease.common.security.JwtService;
 import com.legalease.user.model.User;
 import com.legalease.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +36,8 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    private static final String UPLOAD_DIR = "Upload/certificates/";
+    private static final String UPLOAD_DIR =
+            System.getProperty("user.dir") + "/uploads/certificates/";
 
     @Transactional
     public AuthResponse register(RegisterRequest request, MultipartFile certificate) throws IOException {
@@ -167,8 +169,11 @@ public class AuthService {
     }
     private String saveCertificate(MultipartFile file,
                                    String email) throws IOException {
+//        System.out.println("UPLOAD_DIR = " + UPLOAD_DIR);
+//        System.out.println("Absolute Path = " + Paths.get(UPLOAD_DIR).toAbsolutePath());
         // Create directory if not exists
         Path uploadPath = Paths.get(UPLOAD_DIR);
+
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
