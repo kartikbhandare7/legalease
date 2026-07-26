@@ -70,7 +70,7 @@ class ClientServiceTest {
 
         existingClient = Client.builder()
                 .id(clientId)
-                .case_(linkedCase)
+                .legalCase(linkedCase)
                 .lawyer(lawyer)
                 .clientName("John Doe")
                 .phone("9876543210")
@@ -107,7 +107,7 @@ class ClientServiceTest {
                     .thenReturn(Optional.of(lawyer));
             when(caseRepository.findByIdAndLawyerId(caseId, lawyerId))
                     .thenReturn(Optional.of(linkedCase));
-            when(clientRepository.existsByCaseIdAndClientNameIgnoreCase(
+            when(clientRepository.existsByLegalCase_IdAndClientNameIgnoreCase(
                     caseId, "John Doe"))
                     .thenReturn(false);
             when(clientRepository.save(any(Client.class)))
@@ -161,7 +161,7 @@ class ClientServiceTest {
                     .thenReturn(Optional.of(lawyer));
             when(caseRepository.findByIdAndLawyerId(caseId, lawyerId))
                     .thenReturn(Optional.of(linkedCase));
-            when(clientRepository.existsByCaseIdAndClientNameIgnoreCase(
+            when(clientRepository.existsByLegalCase_IdAndClientNameIgnoreCase(
                     caseId, "John Doe"))
                     .thenReturn(true);
 
@@ -181,7 +181,7 @@ class ClientServiceTest {
 
             Client manualClient = Client.builder()
                     .id(UUID.randomUUID())
-                    .case_(linkedCase)
+                    .legalCase(linkedCase)
                     .lawyer(lawyer)
                     .clientName("John Doe")
                     .rawIntakeNote("Manual note by lawyer")
