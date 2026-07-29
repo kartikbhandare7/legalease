@@ -37,15 +37,15 @@ public class PDFExportService {
     private final CaseRepository caseRepository;
     private final ClientRepository clientRepository;
     private final HearingRepository hearingRepository;
-    private static final PdfFont BOLD_FONT;
-
-    static {
-        try {
-            BOLD_FONT = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
-        } catch (IOException e) {
-            throw new ExceptionInInitializerError(e);
-        }
-    }
+//    private static final PdfFont BOLD_FONT;
+//
+//    static {
+//        try {
+//            BOLD_FONT = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+//        } catch (IOException e) {
+//            throw new ExceptionInInitializerError(e);
+//        }
+//    }
 
     private static final DateTimeFormatter DATE_FMT =
             DateTimeFormatter.ofPattern("dd MMM yyyy");
@@ -69,26 +69,32 @@ public class PDFExportService {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PdfDocument pdf = new PdfDocument(new PdfWriter(out));
         Document doc = new Document(pdf);
+        PdfFont boldFont;
+        try {
+            boldFont = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to load PDF font", e);
+        }
 
         // Header
-        addHeader(doc, "Case Summary Report");
+        addHeader(doc, "Case Summary Report", boldFont);
         addDivider(doc);
 
         // Case details table
         Table table = new Table(UnitValue.createPercentArray(new float[]{35, 65}))
                 .setWidth(UnitValue.createPercentValue(100));
 
-        addRow(table, "Case Title",   legalCase.getCaseTitle());
-        addRow(table, "Case Type",    legalCase.getCaseType().name());
-        addRow(table, "Status",       legalCase.getCaseStatus().name());
-        addRow(table, "Case Number",  orNA(legalCase.getCaseNumber()));
-        addRow(table, "Court",        orNA(legalCase.getCourtName()));
-        addRow(table, "Lawyer",       legalCase.getLawyer().getFullName());
+        addRow(table, "Case Title",   legalCase.getCaseTitle(),boldFont);
+        addRow(table, "Case Type",    legalCase.getCaseType().name(),boldFont);
+        addRow(table, "Status",       legalCase.getCaseStatus().name(),boldFont);
+        addRow(table, "Case Number",  orNA(legalCase.getCaseNumber()),boldFont);
+        addRow(table, "Court",        orNA(legalCase.getCourtName()),boldFont);
+        addRow(table, "Lawyer",       legalCase.getLawyer().getFullName(),boldFont);
         addRow(table, "Filed On",     legalCase.getCreatedAt()
-                .format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
+                .format(DateTimeFormatter.ofPattern("dd MMM yyyy")),boldFont);
 
         if (legalCase.getNotes() != null) {
-            addRow(table, "Notes", legalCase.getNotes());
+            addRow(table, "Notes", legalCase.getNotes() ,boldFont);
         }
 
         doc.add(table);
@@ -110,21 +116,28 @@ public class PDFExportService {
         PdfDocument pdf = new PdfDocument(new PdfWriter(out));
         Document doc = new Document(pdf);
 
-        addHeader(doc, "Client Intake Form");
+        PdfFont boldFont;
+        try {
+            boldFont = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to load PDF font", e);
+        }
+
+        addHeader(doc, "Client Intake Form",boldFont);
         addDivider(doc);
 
         Table table = new Table(UnitValue.createPercentArray(new float[]{35, 65}))
                 .setWidth(UnitValue.createPercentValue(100));
 
-        addRow(table, "Client Name",     client.getClientName());
-        addRow(table, "Phone",           orNA(client.getPhone()));
-        addRow(table, "Email",           orNA(client.getEmail()));
-        addRow(table, "Opposing Party",  orNA(client.getOpposingParty()));
-        addRow(table, "Case",            client.getLegalCase().getCaseTitle());
-        addRow(table, "Case Background", orNA(client.getCaseBackground()));
-        addRow(table, "AI Assisted",     client.isAiAssisted() ? "Yes" : "No");
+        addRow(table, "Client Name",     client.getClientName(),boldFont);
+        addRow(table, "Phone",           orNA(client.getPhone()),boldFont);
+        addRow(table, "Email",           orNA(client.getEmail()),boldFont);
+        addRow(table, "Opposing Party",  orNA(client.getOpposingParty()),boldFont);
+        addRow(table, "Case",            client.getLegalCase().getCaseTitle(),boldFont);
+        addRow(table, "Case Background", orNA(client.getCaseBackground()),boldFont);
+        addRow(table, "AI Assisted",     client.isAiAssisted() ? "Yes" : "No",boldFont);
         addRow(table, "Intake Date",     client.getCreatedAt()
-                .format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
+                .format(DateTimeFormatter.ofPattern("dd MMM yyyy")),boldFont);
 
         doc.add(table);
         addFooter(doc);
@@ -146,23 +159,29 @@ public class PDFExportService {
         PdfDocument pdf = new PdfDocument(new PdfWriter(out));
         Document doc = new Document(pdf);
 
-        addHeader(doc, "Hearing Log");
+        PdfFont boldFont;
+        try {
+            boldFont = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to load PDF font", e);
+        }
+        addHeader(doc, "Hearing Log",boldFont);
         addDivider(doc);
 
         Table table = new Table(UnitValue.createPercentArray(new float[]{35, 65}))
                 .setWidth(UnitValue.createPercentValue(100));
 
-        addRow(table, "Case",         hearing.getLegalCase().getCaseTitle());
-        addRow(table, "Lawyer",       hearing.getLawyer().getFullName());
-        addRow(table, "Hearing Date", hearing.getHearingDate().format(DATE_FMT));
+        addRow(table, "Case",         hearing.getLegalCase().getCaseTitle(),boldFont);
+        addRow(table, "Lawyer",       hearing.getLawyer().getFullName(),boldFont);
+        addRow(table, "Hearing Date", hearing.getHearingDate().format(DATE_FMT),boldFont);
         addRow(table, "Next Date",    hearing.getNextDate() != null
-                ? hearing.getNextDate().format(DATE_FMT) : "N/A");
-        addRow(table, "Outcome",      orNA(hearing.getOutcome()));
-        addRow(table, "Action Items", orNA(hearing.getActionItems()));
-        addRow(table, "AI Assisted",  hearing.isAiAssisted() ? "Yes" : "No");
+                ? hearing.getNextDate().format(DATE_FMT) : "N/A",boldFont);
+        addRow(table, "Outcome",      orNA(hearing.getOutcome()),boldFont);
+        addRow(table, "Action Items", orNA(hearing.getActionItems()),boldFont);
+        addRow(table, "AI Assisted",  hearing.isAiAssisted() ? "Yes" : "No",boldFont);
 
         if (hearing.getRawNote() != null) {
-            addRow(table, "Original Note", hearing.getRawNote());
+            addRow(table, "Original Note", hearing.getRawNote(),boldFont);
         }
 
         doc.add(table);
@@ -174,19 +193,22 @@ public class PDFExportService {
 
     // ── PDF HELPERS ───────────────────────────────────────────────────────────
 
-    private void addHeader(Document doc, String title) {
-        doc.add(new Paragraph("LegalEase AI")
+    private void addHeader(Document doc, String title, PdfFont boldFont) {
+
+        doc.add(new Paragraph("LegalEase AI by Kartik")
                 .setFontSize(10)
                 .setFontColor(ColorConstants.GRAY));
+
         doc.add(new Paragraph(title)
+                .setFont(boldFont)
                 .setFontSize(20)
-                .setFont(BOLD_FONT)
-                .setMarginBottom(4));
-        doc.add(new Paragraph("Generated on: " +
-                LocalDate.now().format(DATE_FMT))
+                .setMarginBottom(5));
+
+        doc.add(new Paragraph(
+                "Generated on: " + LocalDate.now().format(DATE_FMT))
                 .setFontSize(9)
                 .setFontColor(ColorConstants.GRAY)
-                .setMarginBottom(8));
+                .setMarginBottom(10));
     }
 
     private void addDivider(Document doc) {
@@ -196,14 +218,26 @@ public class PDFExportService {
                 .setMarginBottom(10));
     }
 
-    private void addRow(Table table, String label, String value) {
-        table.addCell(new Cell()
-                .add(new Paragraph(label).setFont(BOLD_FONT).setFontSize(10))
-                .setBackgroundColor(ColorConstants.LIGHT_GRAY)
-                .setPadding(6));
-        table.addCell(new Cell()
-                .add(new Paragraph(value).setFontSize(10))
-                .setPadding(6));
+    private void addRow(Table table,
+                        String label,
+                        String value,
+                        PdfFont boldFont) {
+
+        table.addCell(
+                new Cell()
+                        .setBackgroundColor(ColorConstants.LIGHT_GRAY)
+                        .setPadding(6)
+                        .add(new Paragraph(label)
+                                .setFont(boldFont)
+                                .setFontSize(10))
+        );
+
+        table.addCell(
+                new Cell()
+                        .setPadding(6)
+                        .add(new Paragraph(orNA(value))
+                                .setFontSize(10))
+        );
     }
 
     private void addFooter(Document doc) {

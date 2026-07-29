@@ -24,7 +24,7 @@ public class DocumentController {
     private final PDFExportService pdfExportService;
 
     @PostMapping("/export-pdf")
-    @PreAuthorize("hasRole('LAWYER)")
+    @PreAuthorize("hasRole('LAWYER')")
     public ResponseEntity<byte[]> exportPDF(
             @Valid @RequestBody PDFExportRequest request, @CurrentUser UUID lawyerId){
         byte[] pdf = pdfExportService.exportPDF(request, lawyerId);
