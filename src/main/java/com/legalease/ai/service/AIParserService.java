@@ -20,7 +20,10 @@ public class AIParserService {
         long start = System.currentTimeMillis();
 
         try {
+
             String prompt = buildPrompt(request);
+            log.info("Raw text length: {}", request.getRawText().length());
+            log.info("Prompt length: {}", prompt.length());
 
             // Spring AI call — blocks until LLM responds
             String rawJson = chatClient.prompt()

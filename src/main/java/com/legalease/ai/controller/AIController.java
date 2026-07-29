@@ -20,7 +20,7 @@ public class AIController {
     private final AIParserService aiParserService;
 
     @PostMapping("/parse")
-    @PreAuthorize("hasRole('lawyer')")
+    @PreAuthorize("hasRole('LAWYER')")
     public ResponseEntity<AIParseResponse> parse(
             @Valid @RequestBody AIParseRequest request)  {
         return ResponseEntity.ok(aiParserService.parse(request));
