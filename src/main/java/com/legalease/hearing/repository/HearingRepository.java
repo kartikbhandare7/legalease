@@ -33,7 +33,7 @@ public interface HearingRepository extends JpaRepository<Hearing, UUID> {
     );
 
     long countByLawyerIdAndAiAssistedTrue(UUID lawyerId);
-
+    long countByLawyerId(UUID lawyerId);
     boolean existsByLegalCaseIdAndHearingDate(UUID caseId, LocalDate hearingDate);
 
 }

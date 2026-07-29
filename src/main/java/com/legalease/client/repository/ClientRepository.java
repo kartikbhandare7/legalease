@@ -45,4 +45,6 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     boolean existsByLegalCase_IdAndClientNameIgnoreCase(
             UUID caseId,
             String clientName);
+
+    long countByLawyerId(UUID lawyerId);
 }
