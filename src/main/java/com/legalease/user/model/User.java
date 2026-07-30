@@ -46,7 +46,7 @@ public class User {
     private String providerId;
 
     @Column(name = "bar_concil_number")
-    private String barConcilNumber;
+    private String barCouncilNumber;
 
     @Column(name = "certificate_path")
     private String certificatePath;
