@@ -1,17 +1,18 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/legalease_db
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+  application:
+    name: legalease-ai
+
+  profiles:
+    active: dev
 
   jpa:
     hibernate:
-      ddl-auto: update        # Flyway owns schema — JPA only validates
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:
     enabled: true
@@ -31,27 +32,17 @@ spring:
               - profile
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
 
-  # Spring AI — Gemini via OpenAI-compatible endpoint
-  ai:
-    openai:
-      api-key: ${GROQ_API_KEY}
-      base-url: https://api.groq.com/openai/v1
-      chat:
-        options:
-          model: llama-3.3-70b-versatile
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 12MB
 
-# Custom app properties
 app:
-#  upload-dir: uploads/certificates
   jwt:
-    secret: ${JWT_SECRET}       # min 32 chars — store in .env, never commit
-    expiration-ms: 86400000     # 24 hours
-  frontend-url: http://localhost:5173
+    secret: ${JWT_SECRET}
+    expiration-ms: 86400000   # 24 hours
+  frontend-url: ${FRONTEND_URL}
 
 server:
   port: 8080
 
-logging:
-  level:
-    org.flywaydb: DEBUG
-    org.springframework.jdbc: DEBUG

@@ -1,0 +1,40 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/legalease_db
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    Hikari:
+      pool-name: LegalEase-Dev-Pool
+      maximum-pool-size: 5
+
+  jpa:
+    show-sql: true              # see queries in dev console
+    properties:
+      hibernate:
+        format_sql: true
+
+  ai:
+    openai:
+      api-key: ${GROQ_API_KEY}
+      base-url: https://api.groq.com/openai/v1
+      chat:
+        options:
+          model: llama-3.3-70b-versatile
+          temperature: 0.2
+
+app:
+  frontend-url: http://localhost:5173
+
+logging:
+  level:
+    com.legalease: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.ai: DEBUG
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
