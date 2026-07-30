@@ -66,7 +66,7 @@ public class AuthService {
         if(request.getRole() == UserRole.ROLE_LAWYER){
             String certPath = saveCertificate(certificate , request.getEmail());
             userBuilder
-                    .barConcilNumber(request.getBarCouncilNumber())
+                    .barCouncilNumber(request.getBarCouncilNumber())
                     .certificatePath(certPath)
                     .referralCode(generateReferralCode());
         }
