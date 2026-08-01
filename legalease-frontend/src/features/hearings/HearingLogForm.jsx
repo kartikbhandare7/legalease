@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useLogHearingMutation } from './hearingsApi'
+import { useGetCasesQuery } from '@/features/cases/casesApi'
 import Modal from '@/components/common/Modal'
 import Input from '@/components/common/Input'
 import Button from '@/components/common/Button'
@@ -19,6 +20,10 @@ const schema = z.object({
 export default function HearingLogForm({ open, onClose, caseId }) {
   const [logHearing, { isLoading }] = useLogHearingMutation()
 
+  const { data: casesData } = useGetCasesQuery(
+     { size: 100 },
+     { skip: !!caseId }
+  )
   const { register, handleSubmit, reset, setValue,
           formState: { errors } } = useForm({
     resolver: zodResolver(schema),
@@ -56,7 +61,7 @@ export default function HearingLogForm({ open, onClose, caseId }) {
     try {
       await logHearing({
         ...data,
-        caseId,
+        caseId: data.caseId ?? caseId,
         aiAssisted: data.aiAssisted ?? false,
         rawNote:    data.rawNote    ?? null,
         // Convert empty strings to null for optional dates
@@ -76,6 +81,33 @@ export default function HearingLogForm({ open, onClose, caseId }) {
 
         {/* AI Log Input */}
         <AILogInput parseType="HEARING" onParsed={handleAIParsed} />
+
+        {!caseId && (
+          <div className="space-y-1.5">
+            <label
+              className="block text-xs font-semibold text-text-muted
+                         uppercase tracking-wide font-body"
+            >
+              Case
+            </label>
+
+            <select
+              className="w-full h-10 px-3 text-sm font-body text-text
+                         bg-white border border-border rounded
+                         focus:outline-none focus:ring-2
+                         focus:ring-accent/30 focus:border-accent"
+              {...register('caseId', { required: !caseId })}
+            >
+              <option value="">Select a case...</option>
+
+              {casesData?.content?.map(c => (
+                <option key={c.id} value={c.id}>
+                  {c.caseTitle}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-3">
           <Input
