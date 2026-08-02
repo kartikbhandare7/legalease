@@ -11,6 +11,7 @@ import AILogInput from '@/components/ai/AILogInput'
 import toast from 'react-hot-toast'
 
 const schema = z.object({
+  caseId:      z.string().uuid('Please select a case').optional(),
   hearingDate: z.string().min(1, 'Hearing date is required'),
   outcome:     z.string().optional(),
   nextDate:    z.string().optional(),
@@ -42,22 +43,25 @@ export default function HearingLogForm({ open, onClose, caseId }) {
   }, [open])
 
   // AI fills hearing fields after parsing raw note
-  function handleAIParsed(fields, rawNote) {
-    if (fields.hearingDate) setValue('hearingDate', fields.hearingDate)
-    if (fields.nextDate)    setValue('nextDate',    fields.nextDate)
-    if (fields.outcome)     setValue('outcome',     fields.outcome)
-
-    // actionItems from AI is an array — join to comma-separated string
-    // stored as JSON string in backend
-    if (fields.actionItems?.length) {
-      setValue('actionItems', JSON.stringify(fields.actionItems))
-    }
-
-    setValue('rawNote',    rawNote)
-    setValue('aiAssisted', true)
+function handleAIParsed(fields, rawNote) {
+  if (fields.hearingDate) setValue('hearingDate', fields.hearingDate)
+  if (fields.nextDate)    setValue('nextDate',    fields.nextDate)
+  if (fields.outcome)     setValue('outcome',     fields.outcome)
+  if (fields.actionItems?.length) {
+    setValue('actionItems', JSON.stringify(fields.actionItems))
   }
+  setValue('rawNote',    rawNote)
+  setValue('aiAssisted', true)
+  // ← DO NOT set caseId here — it comes from prop or dropdown
+}
 
   async function onSubmit(data) {
+    const resolvedCaseId = caseId ?? data.caseId
+
+  if (!resolvedCaseId) {
+        toast.error('Please select a case')
+        return
+  }
     try {
       await logHearing({
         ...data,
