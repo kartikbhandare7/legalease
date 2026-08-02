@@ -18,6 +18,6 @@ public class AuthResponse {
     private AccountStatus accountStatus;
     private UUID userId;
 
-    private boolean approval;
+    private boolean approved;
 
 }

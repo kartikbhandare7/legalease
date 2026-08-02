@@ -22,7 +22,7 @@ const adminNav = [
 
 export default function Sidebar() {
   const { user } = useSelector(s => s.auth)
-  const dispatch  = useNavigate()
+  const dispatch  = useDispatch()
   const navigate  = useNavigate()
 
   const isAdmin = user?.role === 'ROLE_ADMIN'

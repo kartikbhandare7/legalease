@@ -88,7 +88,7 @@ public class AuthService {
                     .role(saved.getRole())
                     .accountStatus(saved.getAccountStatus())
                     .userId(saved.getId())
-                    .approval(false)
+                    .approved(false)
                     .build();
         }
         String token = jwtService.generateToken(
@@ -101,7 +101,7 @@ public class AuthService {
                 .role(saved.getRole())
                 .accountStatus(AccountStatus.ACTIVE)
                 .userId(saved.getId())
-                .approval(true)
+                .approved(true)
                 .build();
     }
 
@@ -125,7 +125,7 @@ public class AuthService {
                     .role(user.getRole())
                     .accountStatus(AccountStatus.PENDING)
                     .userId(user.getId())
-                    .approval(false)
+                    .approved(false)
                     .build();
         }
         if(user.getAccountStatus() == (AccountStatus.REJECTED)){
@@ -144,7 +144,7 @@ public class AuthService {
                 .role(user.getRole())
                 .accountStatus(user.getAccountStatus())
                 .userId(user.getId())
-                .approval(true)
+                .approved(true)
                 .build();
     }
 
