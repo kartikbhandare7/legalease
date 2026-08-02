@@ -52,7 +52,7 @@ public class User {
     private String certificatePath;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "account_status", unique = false)
+    @Column(name = "account_status", nullable = false)
     private AccountStatus accountStatus;
 
     @Column(name = "referral_code" , unique = true)

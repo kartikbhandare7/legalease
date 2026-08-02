@@ -26,7 +26,20 @@ import AllUsersPage from '@/features/admin/AllUsersPage'
 // OAuth2 callback handler
 import OAuth2Callback from '@/features/auth/OAuth2Callback'
 
+// new inports 
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { refreshCurrentUser } from '@/features/auth/authSlice'
+
 export default function App() {
+  const dispatch = useDispatch()
+const { isAuthenticated } = useSelector(s => s.auth)
+
+useEffect(() => {
+  if (isAuthenticated) {
+    dispatch(refreshCurrentUser())
+  }
+}, [])  
   return (
     <Routes>
 
