@@ -43,6 +43,6 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
 
     // Check if client already exists for this case — avoid duplicates
     boolean existsByLegalCaseIdAndClientNameIgnoreCase(UUID caseId, String clientName);
-
+    // bew thinf da hahsdoif oa
     long countByLawyerId(UUID lawyerId);
 }
