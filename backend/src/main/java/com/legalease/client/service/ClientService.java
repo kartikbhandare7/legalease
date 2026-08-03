@@ -46,7 +46,7 @@ public class ClientService {
                                 "Case not found or access denied"));
 
         // 3. Prevent duplicate client entry for same case
-        if (clientRepository.existsByLegalCase_IdAndClientNameIgnoreCase(
+        if (clientRepository.existsByLegalCaseIdAndClientNameIgnoreCase(
                 request.getCaseId(), request.getClientName())) {
             throw new BadRequestException(
                     "Client '" + request.getClientName() +
@@ -82,7 +82,7 @@ public class ClientService {
 
         Pageable pageable = PageRequest.of(page, size);
         return clientRepository
-                .findByLegalCase_IdOrderByCreatedAtDesc(caseId, pageable)
+                .findByLegalCaseIdOrderByCreatedAtDesc(caseId, pageable)
                 .map(this::mapToResponse);
     }
 

@@ -5,7 +5,6 @@ import {
   useDeleteClientMutation
 } from './clientsApi'
 import Table from '@/components/common/Table'
-import Button from '@/components/common/Button'
 import Pagination from '@/components/common/Pagination'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
 import { useRole } from '@/hooks/useRole'

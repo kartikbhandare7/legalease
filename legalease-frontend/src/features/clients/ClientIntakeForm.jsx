@@ -55,8 +55,9 @@ export default function ClientIntakeForm({ open, onClose, caseId }) {
       toast.success('Client added to case')
       onClose()
     } catch (err) {
-      toast.error(err?.data?.error ?? 'Failed to add client')
-    }
+  console.error('Client creation failed:', err)  // add this line
+  toast.error(err?.data?.error ?? err?.data?.message ?? 'Failed to add client')
+}
   }
 
   return (

@@ -107,7 +107,7 @@ class ClientServiceTest {
                     .thenReturn(Optional.of(lawyer));
             when(caseRepository.findByIdAndLawyerId(caseId, lawyerId))
                     .thenReturn(Optional.of(linkedCase));
-            when(clientRepository.existsByLegalCase_IdAndClientNameIgnoreCase(
+            when(clientRepository.existsByLegalCaseIdAndClientNameIgnoreCase(
                     caseId, "John Doe"))
                     .thenReturn(false);
             when(clientRepository.save(any(Client.class)))
@@ -161,7 +161,7 @@ class ClientServiceTest {
                     .thenReturn(Optional.of(lawyer));
             when(caseRepository.findByIdAndLawyerId(caseId, lawyerId))
                     .thenReturn(Optional.of(linkedCase));
-            when(clientRepository.existsByLegalCase_IdAndClientNameIgnoreCase(
+            when(clientRepository.existsByLegalCaseIdAndClientNameIgnoreCase(
                     caseId, "John Doe"))
                     .thenReturn(true);
 
@@ -194,7 +194,7 @@ class ClientServiceTest {
                     .thenReturn(Optional.of(lawyer));
             when(caseRepository.findByIdAndLawyerId(caseId, lawyerId))
                     .thenReturn(Optional.of(linkedCase));
-            when(clientRepository.existsByLegalCase_IdAndClientNameIgnoreCase(
+            when(clientRepository.existsByLegalCaseIdAndClientNameIgnoreCase(
                     any(), any()))
                     .thenReturn(false);
             when(clientRepository.save(any(Client.class)))
@@ -222,7 +222,7 @@ class ClientServiceTest {
 
             when(caseRepository.findByIdAndLawyerId(caseId, lawyerId))
                     .thenReturn(Optional.of(linkedCase));
-            when(clientRepository.findByLegalCase_IdOrderByCreatedAtDesc(
+            when(clientRepository.findByLegalCaseIdOrderByCreatedAtDesc(
                     eq(caseId), any(Pageable.class)))
                     .thenReturn(page);
 
