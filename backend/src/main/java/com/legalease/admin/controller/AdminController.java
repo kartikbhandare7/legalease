@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/admin")
-@RequiredArgsConstructor
+@RequiredArgsConstructor          // ← this generates the constructor
 // Every method in this controller is ADMIN only — declared at class level
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminController {

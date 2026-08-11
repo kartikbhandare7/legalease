@@ -130,7 +130,7 @@ class AuthServiceTest {
 
             // Lawyer must always start PENDING — never auto-approved
             assertThat(response.getAccountStatus()).isEqualTo(AccountStatus.PENDING);
-            assertThat(response.isApproval()).isFalse();
+            assertThat(response.isApproved()).isFalse();
             assertThat(response.getToken()).isNull(); // no token until approved
 
             verify(userRepository).save(any(User.class));
@@ -215,7 +215,7 @@ class AuthServiceTest {
 
             // Clerk is auto-approved — gets token immediately
             assertThat(response.getAccountStatus()).isEqualTo(AccountStatus.ACTIVE);
-            assertThat(response.isApproval()).isTrue();
+            assertThat(response.isApproved()).isTrue();
             assertThat(response.getToken()).isEqualTo("clerk-jwt-token");
         }
 
@@ -266,7 +266,7 @@ class AuthServiceTest {
             var response = authService.login(request);
 
             assertThat(response.getToken()).isEqualTo("lawyer-jwt-token");
-            assertThat(response.isApproval()).isTrue();
+            assertThat(response.isApproved()).isTrue();
             assertThat(response.getAccountStatus()).isEqualTo(AccountStatus.ACTIVE);
 
             // AuthenticationManager must be called to verify credentials
@@ -288,7 +288,7 @@ class AuthServiceTest {
 
             // No token for pending lawyers
             assertThat(response.getToken()).isNull();
-            assertThat(response.isApproval()).isFalse();
+            assertThat(response.isApproved()).isFalse();
             assertThat(response.getAccountStatus()).isEqualTo(AccountStatus.PENDING);
 
             verify(jwtService, never())
