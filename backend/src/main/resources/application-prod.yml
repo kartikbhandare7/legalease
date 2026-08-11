@@ -1,0 +1,51 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: LegalEase-Dev-Pool
+      maximum-pool-size: 3
+      minimum-idle: 1
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  ai:
+    openai:
+      api-key: ${GROQ_API_KEY}
+      base-url: https://api.groq.com/openai/v1
+      chat:
+        options:
+          model: llama-3.3-70b-versatile
+          temperature: 0.2
+
+app:
+  frontend-url: ${FRONTEND_URL}   # your deployed React domain
+
+server:
+  port: ${PORT}
+
+logging:
+  level:
+    com.legalease: INFO
+    org.springframework.security: WARN
+    org.springframework.ai: WARN
+    org.hibernate.SQL: WARN
+  file:
+    name: logs/legalease.log      # write logs to file in prod
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7
