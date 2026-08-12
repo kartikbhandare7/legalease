@@ -33,11 +33,4 @@ build/
 .vscode/
 
 
-#src/main/resources/application*.yml
-#src/main/resources/application*.yaml
-# Local dev config with real credentials
-#src/main/resources/application-dev.yml
-#src/main/resources/application-prod.yml
-#src/main/resources/application.yaml
-
 

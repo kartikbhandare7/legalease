@@ -35,7 +35,7 @@ app:
   frontend-url: ${FRONTEND_URL}   # your deployed React domain
 
 server:
-  port: ${PORT}
+  port: ${PORT:8080}
 
 logging:
   level:
