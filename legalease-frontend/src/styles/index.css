@@ -1,6 +1,10 @@
-@import "tailwindcss";
+/* 1. Google Fonts import MUST be first — before everything else */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
+/* 2. Tailwind import second */
+@import "tailwindcss";
+
+/* 3. Theme tokens third */
 @theme {
   --color-ink: #1A1A2E;
   --color-ink-light: #16213E;
@@ -19,6 +23,7 @@
   --font-mono: "JetBrains Mono", monospace;
 }
 
+/* 4. Base styles last */
 *, *::before, *::after {
   box-sizing: border-box;
 }
