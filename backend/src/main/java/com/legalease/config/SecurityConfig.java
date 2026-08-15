@@ -127,7 +127,7 @@ public class SecurityConfig {
         // In prod replace with your actual frontend domain
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",   // Vite dev server
-                "https://yourdomain.com"
+                "https://legalease-f.onrender.com"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
