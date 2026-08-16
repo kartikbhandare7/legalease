@@ -36,6 +36,9 @@ export default function App() {
 const { isAuthenticated } = useSelector(s => s.auth)
 
 useEffect(() => {
+  // Wake up backend on app load — handles Render cold start
+  fetch(`${import.meta.env.VITE_API_BASE_URL}/health`)
+    .catch(() => {}) // silent — just wakes the server
   if (isAuthenticated) {
     dispatch(refreshCurrentUser())
   }
