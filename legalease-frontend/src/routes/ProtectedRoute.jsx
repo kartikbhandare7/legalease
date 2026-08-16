@@ -6,12 +6,11 @@ export default function ProtectedRoute({ children }) {
   const location = useLocation()
 
   if (!isAuthenticated) {
-    // Save intended destination — redirect back after login
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
-  // Approved check — PENDING lawyers see waiting page
-  if (user?.accountStatus === 'PENDING') {
+  // Admins are always ACTIVE — never redirect them to pending
+  if (user?.role !== 'ROLE_ADMIN' && user?.accountStatus === 'PENDING') {
     return <Navigate to="/pending-approval" replace />
   }
 
