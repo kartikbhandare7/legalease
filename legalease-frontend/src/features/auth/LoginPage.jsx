@@ -10,6 +10,26 @@ import Button from '@/components/common/Button'
 import { Scale } from 'lucide-react'
 import toast from 'react-hot-toast'
 
+const [backendWaking, setBackendWaking] = useState(false)
+
+// Modify onSubmit to show message on timeout:
+async function onSubmit(data) {
+  const wakeTimer = setTimeout(() => {
+    setBackendWaking(true)
+  }, 5000)  // after 5 seconds show message
+
+  try {
+    const res = await login(data).unwrap()
+    clearTimeout(wakeTimer)
+    setBackendWaking(false)
+    // ... rest of your existing code
+  } catch (err) {
+    clearTimeout(wakeTimer)
+    setBackendWaking(false)
+    toast.error(err?.data?.error ?? 'Login failed. Try again.')
+  }
+}
+
 const schema = z.object({
   email:    z.string().email('Enter a valid email'),
   password: z.string().min(1, 'Password is required'),
@@ -132,6 +152,12 @@ export default function LoginPage() {
             {...register('password')}
           />
         </div>
+
+        {backendWaking && (
+  <p className="text-xs text-text-muted font-body text-center py-2">
+    Server is waking up — this takes up to 60 seconds on first load...
+  </p>
+)}
 
         <Button
           type="submit"
