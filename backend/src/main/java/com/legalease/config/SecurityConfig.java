@@ -54,6 +54,7 @@ public class SecurityConfig {
                         // ── PUBLIC routes — no token needed (delayed auth pattern) ──
                         .requestMatchers(
                                 "/",
+                                "/health",
                                 "/api/auth/register",
                                 "/api/auth/login",
                                 "/api/auth/refresh",
