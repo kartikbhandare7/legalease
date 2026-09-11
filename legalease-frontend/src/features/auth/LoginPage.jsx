@@ -1,36 +1,15 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { useEffect, useState } from "react";
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useLoginMutation } from './authApi'
 import { setCredentials } from './authSlice'
-
 import Input from '@/components/common/Input'
 import Button from '@/components/common/Button'
 import { Scale } from 'lucide-react'
 import toast from 'react-hot-toast'
-
-const [backendWaking, setBackendWaking] = useState(false)
-
-// Modify onSubmit to show message on timeout:
-async function onSubmit(data) {
-  const wakeTimer = setTimeout(() => {
-    setBackendWaking(true)
-  }, 5000)  // after 5 seconds show message
-
-  try {
-    const res = await login(data).unwrap()
-    clearTimeout(wakeTimer)
-    setBackendWaking(false)
-    // ... rest of your existing code
-  } catch (err) {
-    clearTimeout(wakeTimer)
-    setBackendWaking(false)
-    toast.error(err?.data?.error ?? 'Login failed. Try again.')
-  }
-}
 
 const schema = z.object({
   email:    z.string().email('Enter a valid email'),
@@ -44,17 +23,23 @@ export default function LoginPage() {
   const from      = location.state?.from?.pathname ?? '/dashboard'
 
   const [login, { isLoading }] = useLoginMutation()
+  const [backendWaking, setBackendWaking] = useState(false)  // ← INSIDE component
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(schema)
   })
 
-  async function onSubmit(data) {
+  async function onSubmit(data) {   // ← INSIDE component
+    const wakeTimer = setTimeout(() => {
+      setBackendWaking(true)
+    }, 5000)
+
     try {
       const res = await login(data).unwrap()
+      clearTimeout(wakeTimer)
+      setBackendWaking(false)
 
       if (!res.approved) {
-        // PENDING lawyer — redirect to waiting page
         navigate('/pending-approval')
         return
       }
@@ -64,18 +49,20 @@ export default function LoginPage() {
       navigate(from, { replace: true })
 
     } catch (err) {
+      clearTimeout(wakeTimer)
+      setBackendWaking(false)
       toast.error(err?.data?.error ?? 'Login failed. Try again.')
     }
   }
 
   function handleGoogleLogin() {
-    // Redirect to Spring Boot OAuth2 endpoint
-    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/google`
+    window.location.href =
+      `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/google`
   }
 
   return (
     <div>
-      {/* Mobile logo — only shows when left panel is hidden */}
+      {/* Mobile logo */}
       <div className="flex items-center gap-2 mb-8 lg:hidden">
         <div className="w-8 h-8 rounded bg-ink flex items-center justify-center">
           <Scale size={15} className="text-accent" />
@@ -90,8 +77,7 @@ export default function LoginPage() {
         </h2>
         <p className="text-sm text-text-muted font-body">
           Don't have an account?{' '}
-          <a href="/register"
-             className="text-accent font-semibold hover:underline">
+          <a href="/register" className="text-accent font-semibold hover:underline">
             Register here
           </a>
         </p>
@@ -106,7 +92,6 @@ export default function LoginPage() {
                    text-sm font-semibold font-body text-text
                    transition-colors duration-150 mb-6"
       >
-        {/* Google SVG icon */}
         <svg width="16" height="16" viewBox="0 0 48 48">
           <path fill="#EA4335"
             d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38
@@ -131,53 +116,10 @@ export default function LoginPage() {
       {/* Divider */}
       <div className="flex items-center gap-3 mb-6">
         <div className="flex-1 h-px bg-border" />
-        <span className="text-xs text-text-muted font-body">or sign in with email</span>
+        <span className="text-xs text-text-muted font-body">
+          or sign in with email
+        </span>
         <div className="flex-1 h-px bg-border" />
       </div>
 
-      {/* Email / password form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <Input
-          label="Email address"
-          type="email"
-          placeholder="rahul@example.com"
-          error={errors.email?.message}
-          {...register('email')}
-        />
-
-        <div className="space-y-1.5">
-          <Input
-            label="Password"
-            type="password"
-            placeholder="••••••••"
-            error={errors.password?.message}
-            {...register('password')}
-          />
-        </div>
-
-        {backendWaking && (
-  <p className="text-xs text-text-muted font-body text-center py-2">
-    Server is waking up — this takes up to 60 seconds on first load...
-  </p>
-)}
-
-        <Button
-          type="submit"
-          className="w-full mt-2"
-          size="lg"
-          loading={isLoading}
-        >
-          Sign in
-        </Button>
-      </form>
-
-      {/* Delayed auth note */}
-      <p className="text-xs text-text-muted font-body text-center mt-6">
-        Browsing without an account?{' '}
-        <a href="/" className="text-accent hover:underline">
-          Explore the app first
-        </a>
-      </p>
-    </div>
-  )
-}
+      {/*
