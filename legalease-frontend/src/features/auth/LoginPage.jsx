@@ -23,13 +23,13 @@ export default function LoginPage() {
   const from      = location.state?.from?.pathname ?? '/dashboard'
 
   const [login, { isLoading }] = useLoginMutation()
-  const [backendWaking, setBackendWaking] = useState(false)  // ← INSIDE component
+  const [backendWaking, setBackendWaking] = useState(false)
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(schema)
   })
 
-  async function onSubmit(data) {   // ← INSIDE component
+  async function onSubmit(data) {
     const wakeTimer = setTimeout(() => {
       setBackendWaking(true)
     }, 5000)
@@ -62,6 +62,7 @@ export default function LoginPage() {
 
   return (
     <div>
+
       {/* Mobile logo */}
       <div className="flex items-center gap-2 mb-8 lg:hidden">
         <div className="w-8 h-8 rounded bg-ink flex items-center justify-center">
@@ -122,4 +123,49 @@ export default function LoginPage() {
         <div className="flex-1 h-px bg-border" />
       </div>
 
-      {/*
+      {/* Form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <Input
+          label="Email address"
+          type="email"
+          placeholder="rahul@example.com"
+          error={errors.email?.message}
+          {...register('email')}
+        />
+
+        <Input
+          label="Password"
+          type="password"
+          placeholder="••••••••"
+          error={errors.password?.message}
+          {...register('password')}
+        />
+
+        {/* Cold start warning — shows after 5 seconds */}
+        {backendWaking && (
+          <p className="text-xs text-text-muted font-body text-center
+                         py-2 bg-accent-soft rounded px-3">
+            ⏳ Server is waking up — please wait up to 60 seconds...
+          </p>
+        )}
+
+        <Button
+          type="submit"
+          className="w-full mt-2"
+          size="lg"
+          loading={isLoading}
+        >
+          Sign in
+        </Button>
+      </form>
+
+      <p className="text-xs text-text-muted font-body text-center mt-6">
+        Browsing without an account?{' '}
+        <a href="/" className="text-accent hover:underline">
+          Explore the app first
+        </a>
+      </p>
+
+    </div>
+  )
+}
