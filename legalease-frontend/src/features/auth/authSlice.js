@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import api from '@/api/axiosInstance'
 
-// Async thunk — refresh user status from backend on app load
+// Async thunk to refresh user status from backend on app load
 export const refreshCurrentUser = createAsyncThunk(
   'auth/refreshCurrentUser',
   async (_, { rejectWithValue }) => {
@@ -24,6 +24,8 @@ const authSlice = createSlice({
     user:            user  || null,
     isAuthenticated: !!token,
   },
+
+  // ── Sync reducers ─────────────────────────────────────────────────────────
   reducers: {
     setCredentials: (state, action) => {
       const { token, ...user } = action.payload
@@ -41,7 +43,8 @@ const authSlice = createSlice({
       localStorage.removeItem('user')
     }
   },
-  // ← extraReducers is OUTSIDE reducers, at the same level
+
+  // ── Async reducers — OUTSIDE reducers, at the same level ──────────────────
   extraReducers: (builder) => {
     builder
       .addCase(refreshCurrentUser.fulfilled, (state, action) => {
@@ -51,7 +54,7 @@ const authSlice = createSlice({
         }
       })
       .addCase(refreshCurrentUser.rejected, (state) => {
-        // Token invalid or expired — force logout
+        // Token expired or invalid — force logout
         state.token           = null
         state.user            = null
         state.isAuthenticated = false
