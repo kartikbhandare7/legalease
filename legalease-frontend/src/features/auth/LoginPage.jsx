@@ -159,12 +159,6 @@ export default function LoginPage() {
         </Button>
       </form>
 
-      <p className="text-xs text-text-muted font-body text-center mt-6">
-        Browsing without an account?{' '}
-        <a href="/" className="text-accent hover:underline">
-          Explore the app first
-        </a>
-      </p>
 
     </div>
   )

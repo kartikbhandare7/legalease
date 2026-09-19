@@ -48,8 +48,8 @@ useEffect(() => {
 
       {/* Public routes — delayed auth gate */}
       <Route element={<AuthLayout />}>
-        <Route path="/login"    element={<PublicRoute><LoginPage /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+        <Route path="/login"    element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/pending-approval" element={<PendingApprovalPage />} />
         <Route path="/oauth2/callback"  element={<OAuth2Callback />} />
       </Route>
