@@ -8,8 +8,8 @@ export const refreshCurrentUser = createAsyncThunk(
     try {
       const res = await api.get('/api/auth/me')
       return res.data
-    } catch {
-      return rejectWithValue(null)
+    } catch (err) {
+      return rejectWithValue(err.response?.status ?? 0)
     }
   }
 )
@@ -53,13 +53,13 @@ const authSlice = createSlice({
           localStorage.setItem('user', JSON.stringify(state.user))
         }
       })
-      .addCase(refreshCurrentUser.rejected, (state) => {
-        // Token expired or invalid — force logout
-        state.token           = null
-        state.user            = null
-        state.isAuthenticated = false
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
+      .addCase(refreshCurrentUser.rejected, (state, action) => {
+        if (action.payload === 401) {
+          state.token           = null
+          state.user            = null
+          state.isAuthenticated = false
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
       })
   }
 })
