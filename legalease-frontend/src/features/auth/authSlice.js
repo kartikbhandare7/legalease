@@ -19,50 +19,57 @@ const user  = JSON.parse(localStorage.getItem('user') || 'null')
 
 const authSlice = createSlice({
   name: 'auth',
+
   initialState: {
-    token:           token || null,
-    user:            user  || null,
+    token: token || null,
+    user: user || null,
     isAuthenticated: !!token,
   },
 
-  // ── Sync reducers ─────────────────────────────────────────────────────────
   reducers: {
     setCredentials: (state, action) => {
-      const { token, ...user } = action.payload
-      state.token           = token
-      state.user            = user
-      state.isAuthenticated = true
-      localStorage.setItem('token', token)
-      localStorage.setItem('user', JSON.stringify(user))
+      const { token, ...user } = action.payload;
+
+      state.token = token;
+      state.user = user;
+      state.isAuthenticated = true;
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
     },
+
     logout: state => {
-      state.token           = null
-      state.user            = null
-      state.isAuthenticated = false
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
+      state.token = null;
+      state.user = null;
+      state.isAuthenticated = false;
+
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
     }
   },
 
-  // ── Async reducers — OUTSIDE reducers, at the same level ──────────────────
   extraReducers: (builder) => {
     builder
       .addCase(refreshCurrentUser.fulfilled, (state, action) => {
         if (action.payload) {
-          state.user = { ...state.user, ...action.payload }
-          localStorage.setItem('user', JSON.stringify(state.user))
+          state.user = { ...state.user, ...action.payload };
+          localStorage.setItem('user', JSON.stringify(state.user));
         }
       })
+
       .addCase(refreshCurrentUser.rejected, (state, action) => {
         if (action.payload === 401) {
-          state.token           = null
-          state.user            = null
-          state.isAuthenticated = false
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
-      })
+          state.token = null;
+          state.user = null;
+          state.isAuthenticated = false;
+
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
+      });
   }
-})
+});
+
 
 export const { setCredentials, logout } = authSlice.actions
 export default authSlice.reducer
