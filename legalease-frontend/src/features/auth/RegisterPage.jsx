@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+// Change this import:
+import { Link, useNavigate } from 'react-router-dom'
 import { useRegisterMutation } from './authApi'
 import { setCredentials } from './authSlice'
 import Input from '@/components/common/Input'
@@ -139,10 +140,9 @@ export default function RegisterPage() {
         </h2>
         <p className="text-sm text-text-muted font-body">
           Already registered?{' '}
-          <a href="/login"
-             className="text-accent font-semibold hover:underline">
+          <Link to="/login" className="text-accent font-semibold hover:underline">
             Sign in
-          </a>
+          </Link>
         </p>
       </div>
 

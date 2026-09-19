@@ -3,7 +3,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate, useLocation } from 'react-router-dom'
+
+// Change this import:
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useLoginMutation } from './authApi'
 import { setCredentials } from './authSlice'
 import Input from '@/components/common/Input'
@@ -78,9 +80,9 @@ export default function LoginPage() {
         </h2>
         <p className="text-sm text-text-muted font-body">
           Don't have an account?{' '}
-          <a href="/register" className="text-accent font-semibold hover:underline">
+          <Link to="/register" className="text-accent font-semibold hover:underline">
             Register here
-          </a>
+          </Link>
         </p>
       </div>
 
